@@ -2,7 +2,7 @@
 using Amazon.SecretsManager.Model;
 using Newtonsoft.Json;
 using System;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace webapi.Data
 {
@@ -15,7 +15,6 @@ namespace webapi.Data
         }
 
         private static string _connectionString;
-
         public static string ConnectionString
         {
             get
