@@ -35,7 +35,7 @@ namespace webapi.Controllers
 
         // PUT: api/Books/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<Book>> PutBook(int id, Book book)
+        public async Task<ActionResult> PutBook(int id, Book book)
         {
             if (!ModelState.IsValid)
             {
