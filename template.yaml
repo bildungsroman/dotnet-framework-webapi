@@ -297,11 +297,6 @@ Resources:
             x-amazon-apigateway-any-method:
               responses: {}
               isDefaultRoute: true
-              x-amazon-apigateway-integration:
-                httpMethod: ANY
-                type: http_proxy
-                uri: !Ref EnvConfigdotnetApplicationEndpointURLAsString
-                payloadFormatVersion: '1.0'
           /api/books:
             x-amazon-apigateway-any-method:
               responses: {}
@@ -373,26 +368,6 @@ Resources:
             ApiId: !Ref HttpApi
             PayloadFormatVersion: '2.0'
             TimeoutInMillis: 29000
-  WebApiScalableTarget:
-    Type: AWS::ApplicationAutoScaling::ScalableTarget
-    Properties:
-      MinCapacity: 1
-      MaxCapacity: 10
-      ResourceId: !Sub function:${WebApi}:live
-      RoleARN: !Sub arn:aws:iam::${AWS::AccountId}:role/aws-service-role/lambda.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_LambdaConcurrency
-      ScalableDimension: lambda:function:ProvisionedConcurrency
-      ServiceNamespace: lambda
-    DependsOn: WebApiAliaslive
-  WebApiScalingPolicy:
-    Type: AWS::ApplicationAutoScaling::ScalingPolicy
-    Properties:
-      PolicyName: utilization
-      PolicyType: TargetTrackingScaling
-      ScalingTargetId: !Ref WebApiScalableTarget
-      TargetTrackingScalingPolicyConfiguration:
-        TargetValue: 0.7
-        PredefinedMetricSpecification:
-          PredefinedMetricType: LambdaProvisionedConcurrencyUtilization
 Parameters:
   StackTagName:
     Type: String
@@ -400,9 +375,3 @@ Parameters:
   EnvironmentTagName:
     Type: String
     Description: Environment Name (injected by Stackery at deployment time)
-  EnvConfigdotnetApplicationEndpointURLAsString:
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: /<EnvironmentName>/dotnet/Application/EndpointURL
-Metadata:
-  EnvConfigParameters:
-    EnvConfigdotnetApplicationEndpointURLAsString: dotnet.Application.EndpointURL
